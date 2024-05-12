@@ -5,7 +5,8 @@ import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndP
 export const AuthContext = createContext(null)
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
+  const [loding, setLoding] = useState(true);
 
   // create user
 
@@ -16,10 +17,12 @@ const AuthProvider = ({ children }) => {
   // login User
 
   const loginUser = (email, password) => {
+    setLoding(true)
     return signInWithEmailAndPassword(auth, email, password)
   }
   // logut user
   const logOut = () => {
+    setLoding(true)
     return signOut(auth);
   }
 
@@ -29,6 +32,7 @@ const AuthProvider = ({ children }) => {
     const unSubscrib = onAuthStateChanged(auth, currentUser => {
       console.log('auth user :', currentUser)
       setUser(currentUser);
+      setLoding(false)
     });
     return () => {
       unSubscrib();
@@ -36,6 +40,7 @@ const AuthProvider = ({ children }) => {
   }, [])
   const authInfo = {
     user,
+    loding,
     createUser,
     loginUser,
     logOut
